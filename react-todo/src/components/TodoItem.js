@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ProtoTypes from "prop-types";
+import PropTypes from "prop-types";
 
 export class TodoItem extends Component {
     getStyle = () => {
@@ -32,8 +32,10 @@ export class TodoItem extends Component {
     }
 }
 
-TodoItem.protoTypes = {
-    todo: ProtoTypes.object.isRequired,
+TodoItem.propTypes = {
+    todo: PropTypes.object.isRequired,
+    markComplete: PropTypes.func.isRequired,
+    deleteTodo: PropTypes.func.isRequired,
 };
 
 const btnDelete = {

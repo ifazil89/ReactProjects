@@ -7,28 +7,20 @@ import AddTodo from "./components/AddTodo";
 import { v4 as uuid } from "uuid";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import About from "./components/pages/About";
+import axios from "axios";
 
 class App extends Component {
     state = {
-        todos: [
-            {
-                id: uuid(),
-                title: "React Course",
-                completed: false,
-            },
-            {
-                id: uuid(),
-                title: "Node JS Project Course",
-                completed: true,
-            },
-            {
-                id: uuid(),
-                title: "React Native Course",
-                completed: false,
-            },
-        ],
+        todos: [],
     };
 
+    componentDidMount() {
+        axios
+            .get("https://jsonplaceholder.typicode.com/todos?_limit=10")
+            .then((res) => {
+                this.setState({ todos: res.data });
+            });
+    }
     markComplete = (id) => {
         this.setState(
             this.state.todos.map((todo) => {
@@ -40,18 +32,35 @@ class App extends Component {
     };
 
     deleteTodo = (id) => {
-        this.setState({
+        axios
+            .delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+            .then((res) => {
+                this.setState({
+                    todos: [
+                        ...this.state.todos.filter((todo) => todo.id !== id),
+                    ],
+                });
+            });
+        /*this.setState({
             todos: [...this.state.todos.filter((todo) => todo.id !== id)],
-        });
+        });*/
     };
 
     addTodo = (title) => {
-        const todo = {
+        /*const todo = {
             id: uuid(),
             title,
             completed: false,
-        };
-        this.setState({ todos: [...this.state.todos, todo] });
+        };*/
+        axios
+            .post("https://jsonplaceholder.typicode.com/todos", {
+                title,
+                completed: false,
+            })
+            .then((res) => {
+                this.setState({ todos: [...this.state.todos, res.data] });
+            });
+        //this.setState({ todos: [...this.state.todos, todo] });
     };
 
     render() {
